@@ -5,13 +5,17 @@ class Message:
         """
         Crée un nouveau message dans la base de données.
         """
-        query = "INSERT INTO messages (message_content, time, user_id, channel_id) VALUES (%s, %s, %s)"
+        query = "INSERT INTO message (message_content, time, user_id, channel_id) VALUES (%s, %s, %s)"
         params = (message_content, time, user_id, channel_id)
         self.database.execute(query, params)
     def load_messages_from_channel(self, channel_id):
         """
         Récupère les messages d'un canal.
         """
-        query = "SELECT * FROM messages WHERE channel_id = %s"
+        query = "SELECT * FROM message WHERE channel_id = %s"
         params = (channel_id,)
-        return self.database.query(query, params)
+        results = self.database.query(query, params)
+        messages = []
+        for row in results:
+            messages.append(row[1])
+        return messages

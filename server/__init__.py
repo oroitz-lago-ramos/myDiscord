@@ -1,4 +1,7 @@
 
 
-from .server import Server
+# from .server import Server
 from .database import Database
+from .user import User
+from .message import Message
+from .channel import Channel

@@ -3,7 +3,7 @@ class Database:
     def __init__(self):
         self.conn = self.connect_to_database()
 
-    def connect_to_databse(self):
+    def connect_to_database(self):
         """
         Établit une connexion à la base de données MySQL et retourne l'objet de connexion.
         """
@@ -27,7 +27,7 @@ class Database:
         results = []
         if self.conn:
             try:
-                cursor = self.conn.cursor(dictionary=True)
+                cursor = self.conn.cursor()
                 if params:
                     cursor.execute(query, params)
                 else:
