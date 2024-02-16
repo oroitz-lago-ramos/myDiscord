@@ -47,8 +47,8 @@ class MyDiscord():
 
         messages_list = tk.Listbox(subframe2, bg=SECONDARY_COLOR, fg="white", activestyle="none")
         messages_list.insert(0, "Bienvenue sur le chat")
-        for message_content in message.load_messages_from_channel(1):
-            messages_list.insert(tk.END, f"{pseudo1}: {message_content}")
+        for message in message.load_messages_from_channel(1):
+            messages_list.insert(tk.END, f"{message['user_name']}: {message['content']}")
         messages_list.pack(fill="both", expand=True)
 
         enter_message_box_var = tk.StringVar()
