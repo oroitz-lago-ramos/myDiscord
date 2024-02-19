@@ -51,6 +51,7 @@ class Database:
                     cursor.execute(query)
                 self.conn.commit()
                 cursor.close()
+                print("Requête SQL exécutée avec succès.")
             except mysql.connector.Error as e:
                 print(f"Erreur lors de l'exécution de la requête SQL : {e}")
 

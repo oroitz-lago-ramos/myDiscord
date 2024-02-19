@@ -1,13 +1,15 @@
 class Message:
     def __init__(self, database):
         self.database = database
-    def create(self, message_content, time, user_id, channel_id):
+    def send_message(self, message_content, time, user_id, channel_id):
         """
         Crée un nouveau message dans la base de données.
         """
-        query = "INSERT INTO message (message_content, time, user_id, channel_id) VALUES (%s, %s, %s)"
+        query = "INSERT INTO message (message_content, time, user_id, channel_id) VALUES (%s, %s, %s, %s)"
         params = (message_content, time, user_id, channel_id)
+        print("Trying to send message")
         self.database.execute(query, params)
+    
     def load_messages_from_channel(self, channel_id):
         """
         Récupère les messages et les noms d'utilisateur des auteurs à partir d'un canal.
@@ -47,3 +49,11 @@ class Message:
     #     params = (message_id,)
     #     result = self.database.query(query, params)
     #     return result[0][0] if result else None
+    
+    def get_channel_id(self, selected_channel):
+        """
+        Récupère l'identifiant d'un canal.
+        """
+        query = "SELECT ID FROM channel WHERE channel_name = %s"
+        params = (selected_channel,)
+        return self.database.query(query, params)

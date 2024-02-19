@@ -39,3 +39,5 @@ class User:
         except Exception as e:
             print(f"Erreur lors de la sélection de l'utilisateur : {e}")
             return None
+    def get_user_id(self):
+        return 2
