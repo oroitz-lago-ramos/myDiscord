@@ -63,19 +63,23 @@ class Chat:
     def send_message(self):
         message = self.enter_message_box_var.get()
         self.channel_id = self.get_selected_channel_id()
+        print(self.channel_id)
+        print(message)
         if message and self.channel_id:
             self.message.send_message(message, datetime.datetime.now(), self.user.get_user_id(), self.channel_id )
             self.enter_message_box_var.set("")
-        print("clicked")
+        self.update_messages()
         
-    def update_messages(self, event):
+    def update_messages(self,event=None):
         self.channel_id = self.get_selected_channel_id()
-        if self.channel_id:
-            self.messages_list.delete(0, tk.END)
-            for message in self.message.load_messages_from_channel(self.channel_id):
-                self.messages_list.insert(tk.END, f"  {message['user_name']}: {message['content']}")
+        self.messages_list.delete(0, tk.END)
+        for message in self.message.load_messages_from_channel(self.channel_id):
+            self.messages_list.insert(tk.END, f"  {message['user_name']}: {message['content']}")
                     
-                    
+    def refresh_messages(self):
+        self.update_messages()
+        self.root.after(1000, self.refresh_messages)
+                      
     def get_selected_channel(self):
         selected_index = self.channels_list.curselection()
         if selected_index:
@@ -88,7 +92,8 @@ class Chat:
         if selected_index:
             selected_channel = self.channels_list.get(selected_index)
             channel_id = self.channel.get_channel_id(selected_channel[1:])[0][0]
-            self.channel_id = channel_id
-        return None
+            return channel_id
+        else:
+            return 1
     
     
