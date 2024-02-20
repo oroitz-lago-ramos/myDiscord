@@ -6,6 +6,7 @@ class Client:
         self.database = database
         self.root = tk.Tk()
         self.chat = client.Chat(self)
+        
     
     def run(self):
         self.chat.run()

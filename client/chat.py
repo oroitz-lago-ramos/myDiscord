@@ -4,9 +4,9 @@ import server
 import datetime
 
 class Chat:
-    def __init__(self, main_client):
+    def __init__(self, client):
         # On instancie nos classes à déplacer
-        self.client = main_client
+        self.client = client
         self.database = self.client.database
         self.user = server.User("test","test", self.database)
         self.channel = server.Channel(self.database)
