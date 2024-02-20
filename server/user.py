@@ -7,7 +7,7 @@ class User:
         self.password = password
         self.database = database
         self.authentified_user = None
-    def create(self, lastname, name):
+    def create(self, lastname, name, password, email, role_id):
         """
         Crée un nouvel utilisateur dans la base de données.
         """
@@ -41,3 +41,11 @@ class User:
             return None
     def get_user_id(self):
         return 2
+    
+    def set_user_role(self, role_name):
+        """
+        Définit le rôle de l'utilisateur.
+        """
+        query = "UPDATE user SET role_id = %s WHERE email = %s"
+        params = (role_name, self.email)
+        self.database.execute(query, params)

@@ -4,16 +4,17 @@ import server
 import datetime
 
 class Chat:
-    def __init__(self, client):
+    def __init__(self, main_client):
         # On instancie nos classes à déplacer
-        self.client = client
-        self.database = self.client.database
+        self.main_client = main_client
+        self.database = self.main_client.database
         self.user = server.User("test","test", self.database)
         self.channel = server.Channel(self.database)
         self.message = server.Message(self.database)
         self.channel_id = 1
+        self.last_selected_channel_id = 1
         
-        self.root = self.client.root
+        self.root = self.main_client.root
         self.root.title("Server rooms")
         self.root.geometry("1080x720")
 
@@ -43,7 +44,7 @@ class Chat:
         self.messages_list.pack(fill="both", expand=True)
 
         self.enter_message_box_var = tk.StringVar()
-        self.enter_message_box_var.set("Entrez votre message")
+        self.enter_message_box_var.set("Entrez votre message...")
         enter_message_box = tk.Entry(chat_frame, bg=client.SECONDARY_COLOR, fg="white", insertbackground="white", textvariable=self.enter_message_box_var)
         enter_message_box.pack(fill="both")
 
@@ -56,7 +57,10 @@ class Chat:
         # self.chat_scroll.pack()
 
         self.channels_list.bind("<<ListboxSelect>>", self.update_messages)
-        
+        enter_message_box.bind("<FocusIn>", self.clear_chat_box)
+        enter_message_box.bind("<FocusOut>", self.reset_chat_box)  
+        enter_message_box.bind("<Return>", lambda event: self.send_message())
+              
     def run(self):
         self.root.mainloop()
     
@@ -75,6 +79,11 @@ class Chat:
         self.messages_list.delete(0, tk.END)
         for message in self.message.load_messages_from_channel(self.channel_id):
             self.messages_list.insert(tk.END, f"  {message['user_name']}: {message['content']}")
+    def clear_chat_box(self, event):
+        self.enter_message_box_var.set("")
+    def reset_chat_box(self, event):
+        if not self.enter_message_box_var.get():
+            self.enter_message_box_var.set("Entrez votre message...")
                     
     def refresh_messages(self):
         self.update_messages()
@@ -87,13 +96,19 @@ class Chat:
             return selected_channel
         return None
     
+    # def get_selected_channel_id(self):
+    #     selected_index = self.channels_list.curselection()
+    #     if selected_index:
+    #         selected_channel = self.channels_list.get(selected_index)
+    #         channel_id = self.channel.get_channel_id(selected_channel[1:])[0][0]
+    #         return channel_id
+    #     else:
+    #         return 1
     def get_selected_channel_id(self):
         selected_index = self.channels_list.curselection()
         if selected_index:
             selected_channel = self.channels_list.get(selected_index)
-            channel_id = self.channel.get_channel_id(selected_channel[1:])[0][0]
-            return channel_id
-        else:
-            return 1
+            self.last_selected_channel_id = self.channel.get_channel_id(selected_channel[1:])[0][0]
+        return self.last_selected_channel_id
     
     
