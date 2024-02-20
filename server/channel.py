@@ -6,14 +6,14 @@ class Channel:
         """
         Récupère l'identifiant d'un canal.
         """
-        query = "SELECT id FROM channel WHERE name = %s"
+        query = "SELECT id FROM channel WHERE channel_name = %s"
         params = (channel_name,)
         return self.database.query(query, params)
     def get_channel_name(self, channel_id):
         """
         Récupère le nom d'un canal.
         """
-        query = "SELECT name FROM channel WHERE id = %s"
+        query = "SELECT channel_name FROM channel WHERE id = %s"
         params = (channel_id,)
         return self.database.query(query, params)
     def get_channels(self):
@@ -22,7 +22,6 @@ class Channel:
         """
         query = "SELECT * FROM channel"
         result = self.database.query(query)
-        print(result)
         names = []
         for row in result:
             names.append(row[1])
