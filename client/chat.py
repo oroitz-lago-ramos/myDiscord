@@ -8,7 +8,8 @@ class Chat:
         # On instancie nos classes à déplacer
         self.main_client = main_client
         self.database = self.main_client.database
-        self.user = server.User("test","test", self.database)
+        
+        self.user = server.User(self.database)
         self.channel = server.Channel(self.database)
         self.message = server.Message(self.database)
         self.channel_id = 1

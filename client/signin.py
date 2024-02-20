@@ -1,2 +1,3 @@
 class Signin:
-    pass
+    def __init__(self, databse) -> None:
+        pass
