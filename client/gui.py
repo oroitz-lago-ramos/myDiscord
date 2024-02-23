@@ -21,8 +21,7 @@ class App:
         self.text_area = tk.Text(root)
         self.text_area.pack()
 
-        self.thread = Thread(target=self.receive_messages, daemon=True)
-        self.thread.start()
+        
 
     def switch_channel(self):
         channel_id = int(self.channel_entry.get())
@@ -39,11 +38,8 @@ class App:
         message = self.message_entry.get()
         self.client.send_chat_message('oroitz@gmail.com', message)  # Replace 'user@example.com' with the actual user email
 
-    def receive_messages(self):
-        # while True:
-        #     message = self.client.receive_message()
-        #     self.text_area.insert(tk.END, message + '\n')
-        pass
+    
+        
 root = tk.Tk()
 app = App(root)
 root.mainloop()

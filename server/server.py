@@ -43,12 +43,12 @@ class Server:
                     if command == 'switch_channel':
                         self.set_current_channel(int(data))
                     elif command == 'message':
-                        user, msg = data.split(' > ', 1)
+                        msg = data
                         time = datetime.datetime.now()
                         user_id = self.user.get_id(self.user_email)
                         channel_id = self.channel_id
-                        print(f"Received message from {user}: {msg}")
-                        self.broadcast(msg, user)
+                        print(f"Received message from {user_id}: {msg}")
+                        # self.broadcast(msg, self.user_email)
                         self.message.send_message(msg, time, user_id, channel_id)
                 elif message == 'load_messages':
                     messages = self.message.load_messages_from_channel(self.channel_id)
