@@ -50,6 +50,9 @@ class Server:
                         print(f"Received message from {user_id}: {msg}")
                         # self.broadcast(msg, self.user_email)
                         self.message.send_message(msg, time, user_id, channel_id)
+                    elif command == 'create_user':
+                        
+                        self.user.create_user(data)
                 elif message == 'load_messages':
                     messages = self.message.load_messages_from_channel(self.channel_id)
                     messages_str = json.dumps(messages)
