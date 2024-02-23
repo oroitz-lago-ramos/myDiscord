@@ -19,6 +19,7 @@ class Message:
         FROM message AS m
         JOIN user AS u ON m.user_id = u.ID
         WHERE m.channel_id = %s
+        ORDER BY m.time ASC
         """
         params = (channel_id,)
         try:
