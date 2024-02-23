@@ -42,6 +42,7 @@ class Chat(tk.Frame):
         
         self.chat_frame.grid(row=0, column=1, sticky="nsew")
         
+        
         self.start_listening()
         
     
@@ -52,7 +53,7 @@ class Chat(tk.Frame):
 
     def display_messages(self):
         messages = self.client.load_messages()
-        self.messages_list.delete('1', tk.END)  # Clear the text area
+        self.messages_list.delete(1, tk.END)  # Clear the text area
         for message in messages:
             self.messages_list.insert(tk.END, f"{message[1]}: {message[0]}\n")
     

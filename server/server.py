@@ -22,7 +22,7 @@ class Server:
         self.channel = Channel(self.database)
 
         self.user_email = "oroitz@gmail.com"  # Add this line
-        self.channel_id = 1  # Add this line
+        self.channel_id = 2  # Add this line
 
     # Add these methods to set the current user and channel
     def set_current_user(self, user_email):
