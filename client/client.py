@@ -25,3 +25,12 @@ class Client:
         else:
             messages = []
         return messages
+    
+    def load_channels(self):
+        self.send_message('load_channels')
+        channels_str = self.receive_message()
+        if channels_str:
+            channels = json.loads(channels_str)
+        else:
+            channels = []
+        return channels

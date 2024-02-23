@@ -22,7 +22,7 @@ class Server:
         self.channel = Channel(self.database)
 
         self.user_email = "oroitz@gmail.com"  # Add this line
-        self.channel_id = None  # Add this line
+        self.channel_id = 1  # Add this line
 
     # Add these methods to set the current user and channel
     def set_current_user(self, user_email):
@@ -46,9 +46,10 @@ class Server:
                         msg = data
                         time = datetime.datetime.now()
                         user_id = self.user.get_id(self.user_email)
+                        user_name = self.user.get_user_name(user_id)
                         channel_id = self.channel_id
-                        print(f"Received message from {user_id}: {msg}")
-                        # self.broadcast(msg, self.user_email)
+                        print(f"Received message from {user_name}: {msg}")
+                        self.broadcast(msg, user_name)
                         self.message.send_message(msg, time, user_id, channel_id)
                     elif command == 'create_user':
                         
@@ -57,6 +58,10 @@ class Server:
                     messages = self.message.load_messages_from_channel(self.channel_id)
                     messages_str = json.dumps(messages)
                     client.sendall(messages_str.encode('utf-8'))
+                elif message == 'load_channels':
+                    channels = self.channel.get_channels()
+                    channels_str = json.dumps(channels)
+                    client.sendall(channels_str.encode('utf-8'))
                 else:
                     print(f"Received unformatted message: {message}")
             except Exception as e:

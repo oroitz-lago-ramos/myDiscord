@@ -21,8 +21,5 @@ class Channel:
         Récupère tous les canaux.
         """
         query = "SELECT * FROM channel"
-        result = self.database.query(query)
-        names = []
-        for row in result:
-            names.append(row[1])
-        return names
+        return self.database.query(query)
+       
