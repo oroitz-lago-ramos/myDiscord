@@ -2,31 +2,26 @@ import socket
 import json
 
 class Client:
-    def __init__(self, host, port):
-        self.host = host
-        self.port = port
-        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    
-    def connect(self):
-        try:
-            self.client_socket.connect((self.host, self.port))
-            print("Connecté au serveur.")
-        except Exception as e:
-            print(f"Impossible de se connecter au serveur : {e}")
-    
-    def send_message(self, channel, user, message):
-        data = {
-            'channel': channel,
-            'user': user,
-            'message': message
-        }
-        try:
-            self.client_socket.send(json.dumps(data).encode('utf-8'))
-            response = self.client_socket.recv(1024).decode('utf-8')
-            print("Réponse du serveur :", response)
-        except Exception as e:
-            print(f"Erreur lors de l'envoi du message : {e}")
+    def __init__(self, host='127.0.0.1', port=55555):
+        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client.connect((host, port))
 
-    def close(self):
-        self.client_socket.close()
-        print("Connexion au serveur fermée.")
+    def send_message(self, message):
+        self.client.send(message.encode('ascii'))
+    def receive_message(self):
+        return self.client.recv(1024).decode('ascii')
+
+    def switch_channel(self, channel_id):
+        self.send_message(f'switch_channel > {channel_id}')
+
+    def send_chat_message(self, user, message):
+        self.send_message(f'message > {message}')
+    
+    def load_messages(self):
+        self.send_message('load_messages')
+        messages_str = self.receive_message()
+        if messages_str:
+            messages = json.loads(messages_str)
+        else:
+            messages = []
+        return messages
