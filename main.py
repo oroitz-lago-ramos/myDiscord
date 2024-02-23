@@ -1,6 +1,10 @@
-import client
-import server
+from server import Server
 
-database = server.Database()
-my_discord = client.Client(database)
-my_discord.run()
+def main():
+    host = "localhost"
+    port = 8080
+    server = Server(host, port)
+    server.start()
+
+if __name__ == "__main__":
+    main()
