@@ -53,7 +53,7 @@ class Chat(tk.Frame):
     def switch_channel(self,event):
         index = self.channels_list.curselection()[0]
         self.client.switch_channel(index + 1)
-        # self.display_messages() 
+        self.display_messages() 
 
     def display_messages(self):
         messages = self.client.load_messages()
