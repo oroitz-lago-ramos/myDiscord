@@ -45,11 +45,15 @@ class Chat(tk.Frame):
         
         self.start_listening()
         
+        enter_message_box.bind("<FocusIn>", self.clear_message_box)
+        enter_message_box.bind("<FocusOut>", self.reset_message_box)  
+        enter_message_box.bind("<Return>", lambda event: self.send_message())
+        self.channels_list.bind("<<ListboxSelect>>", self.switch_channel)
     
-    # def switch_channel(self):
-    #     channel_id = int(self.channel_entry.get())
-    #     self.client.switch_channel(channel_id)
-    #     self.display_messages()
+    def switch_channel(self,event):
+        index = self.channels_list.curselection()[0]
+        self.client.switch_channel(index + 1)
+        # self.display_messages() 
 
     def display_messages(self):
         messages = self.client.load_messages()
@@ -66,6 +70,7 @@ class Chat(tk.Frame):
     def send_message(self):
         message = self.enter_message_box_var.get()
         self.client.send_chat_message('oroitz@gmail.com', message)
+        self.clear_message_box(None)
         
     def start_listening(self):
         listen_thread = threading.Thread(target=self.listen_for_messages)
@@ -74,5 +79,11 @@ class Chat(tk.Frame):
     def listen_for_messages(self):
         while True:
             message = self.client.receive_message() 
-            self.messages_list.insert(tk.END, message)  
+            self.messages_list.insert(tk.END, message) 
+    
+    def clear_message_box(self, event):
+        self.enter_message_box_var.set("")
+    
+    def reset_message_box(self, event):
+        self.enter_message_box_var.set("Entrez votre message...")
         
