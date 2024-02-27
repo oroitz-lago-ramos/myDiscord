@@ -9,7 +9,19 @@ class Client:
     def send_message(self, message):
         self.client.send(message.encode('ascii'))
     def receive_message(self):
-        return self.client.recv(1024).decode('ascii')
+        try:
+            message = self.client.recv(8000).decode('ascii')
+            return message
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return None
+    def receive_loop_message(self):
+        try:
+            message = self.client.recv(8000).decode('ascii')
+            return message
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return None
 
     def switch_channel(self, channel_id):
         self.send_message(f'switch_channel > {channel_id}')
@@ -25,7 +37,7 @@ class Client:
         else:
             messages = []
         return messages
-    
+
     def load_channels(self):
         self.send_message('load_channels')
         channels_str = self.receive_message()

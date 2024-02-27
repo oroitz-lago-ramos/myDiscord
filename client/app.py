@@ -29,24 +29,5 @@ class App(tk.Tk):
         self._frame = new_frame
         self._frame.grid(sticky='nsew')
 
-        
-
-    # def switch_channel(self):
-    #     channel_id = int(self.channel_entry.get())
-    #     self.client.switch_channel(channel_id)
-    #     self.display_messages()
-
-    # def display_messages(self):
-    #     messages = self.client.load_messages()
-    #     self.text_area.delete('1.0', tk.END)  # Clear the text area
-    #     for message in messages:
-    #         self.text_area.insert(tk.END, f"{message[1]}: {message[0]}\n")
-
-    # def send_message(self):
-    #     message = self.message_entry.get()
-    #     self.client.send_chat_message('oroitz@gmail.com', message)  # Replace 'user@example.com' with the actual user email
-
-    
-
 app = App()
 app.mainloop()

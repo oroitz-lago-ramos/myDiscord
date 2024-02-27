@@ -2,6 +2,7 @@ import tkinter as tk
 import client
 import threading
 
+
 class Chat(tk.Frame):
     def __init__(self, master, client):
         tk.Frame.__init__(self, master)
@@ -53,13 +54,14 @@ class Chat(tk.Frame):
     def switch_channel(self,event):
         index = self.channels_list.curselection()[0]
         self.client.switch_channel(index + 1)
-        self.display_messages() 
+        self.display_messages()
 
     def display_messages(self):
         messages = self.client.load_messages()
         self.messages_list.delete(1, tk.END)  # Clear the text area
         for message in messages:
             self.messages_list.insert(tk.END, f"{message[1]}: {message[0]}\n")
+    
     
     def display_channels(self):
         channels = self.client.load_channels()
@@ -78,8 +80,9 @@ class Chat(tk.Frame):
 
     def listen_for_messages(self):
         while True:
-            message = self.client.receive_message() 
-            self.messages_list.insert(tk.END, message) 
+            # message = self.client.receive_loop_message() 
+            # self.after(0, self.messages_list.insert, tk.END, message)
+            pass
     
     def clear_message_box(self, event):
         self.enter_message_box_var.set("")
