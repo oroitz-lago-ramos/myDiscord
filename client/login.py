@@ -14,8 +14,14 @@ class Login(tk.Frame):
         self.create_widgets()
 
     def create_widgets(self):
+        image = Image.open("asset/discord.png")
+        image = image.resize((150, 75))
+        photo = ImageTk.PhotoImage(image)
+        image_label = tk.Label(self, image=photo)
+        image_label.pack(pady=(15,10))
+
         email_label = tk.Label(self, text="Email", bg="#424549", fg="white")
-        email_label.pack(pady=(150, 0))
+        email_label.pack(pady=(10, 0))
         email_entry = tk.Entry(self)
         email_entry.pack(pady=10)
 
@@ -29,8 +35,3 @@ class Login(tk.Frame):
 
         signin_button = tk.Button(self, text="Sign in")
         signin_button.pack(pady=10)
-
-        image = Image.open("discord.jpeg")
-        photo = ImageTk.PhotoImage(image)
-        image_label = tk.Label(self, image=photo)
-        image_label.pack(pady=10)
