@@ -1,6 +1,7 @@
 import tkinter as tk
 from client import Client
 from chat import Chat
+from PIL import Image, ImageTk
 
 class Login(tk.Frame):
     def __init__(self, master, client):
@@ -28,3 +29,8 @@ class Login(tk.Frame):
 
         signin_button = tk.Button(self, text="Sign in")
         signin_button.pack(pady=10)
+
+        image = Image.open("discord.jpeg")
+        photo = ImageTk.PhotoImage(image)
+        image_label = tk.Label(self, image=photo)
+        image_label.pack(pady=10)
