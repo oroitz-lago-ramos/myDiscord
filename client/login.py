@@ -5,28 +5,26 @@ from chat import Chat
 class Login(tk.Frame):
     def __init__(self, master, client):
         tk.Frame.__init__(self, master)
-        self.client = client
+        # self.client = client
 
-        self.username_entry = tk.Entry(self)
-        self.username_entry.pack()
+        master.geometry("420x520")
+        master.configure(bg=master.MAIN_COLOR)
 
-        self.password_entry = tk.Entry(self, show="*")
-        self.password_entry.pack()
+        self.create_widgets()
 
-        self.login_button = tk.Button(self, text="Login", command=self.login)
-        self.login_button.pack()
+    def create_widgets(self):
+        email_label = tk.Label(self, text="Email")
+        email_label.pack(pady=10)
+        email_entry = tk.Entry(self)
+        email_entry.pack(pady=10)
 
-    def login(self):
-        username = self.username_entry.get()
-        password = self.password_entry.get()
+        password_label = tk.Label(self, text="Password")
+        password_label.pack(pady=10)
+        password_entry = tk.Entry(self, show="*")
+        password_entry.pack(pady=10)
 
-        # Send the username and password to the server
-        self.client.send_message(f"LOGIN {username} {password}")
+        login_button = tk.Button(self, text="Connexion")
+        login_button.pack(pady=10)
 
-        # Wait for a response from the server
-        response = self.client.receive_message()
-
-        if response == "LOGIN SUCCESS":
-            # If the login was successful, switch to the Chat page
-            self.master.switch_frame(Chat)
-
+        signin_button = tk.Button(self, text="Sign in")
+        signin_button.pack(pady=10)
