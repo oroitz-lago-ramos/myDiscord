@@ -76,13 +76,14 @@ class Chat(tk.Frame):
         
     def start_listening(self):
         listen_thread = threading.Thread(target=self.listen_for_messages)
+        listen_thread.daemon = True  # Set the thread as daemon so it will exit when the main thread exits
         listen_thread.start()
 
     def listen_for_messages(self):
         while True:
-            # message = self.client.receive_loop_message() 
-            # self.after(0, self.messages_list.insert, tk.END, message)
-            pass
+            message = self.client.receive_loop_message() 
+            if message:
+                self.messages_list.insert(tk.END, message)
     
     def clear_message_box(self, event):
         self.enter_message_box_var.set("")

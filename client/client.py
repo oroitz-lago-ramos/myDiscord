@@ -10,15 +10,18 @@ class Client:
         self.client.send(message.encode('ascii'))
     def receive_message(self):
         try:
-            message = self.client.recv(8000).decode('ascii')
+            message = self.client.recv(20000).decode('ascii')
             return message
         except Exception as e:
             print(f"An error occurred: {e}")
             return None
     def receive_loop_message(self):
         try:
+            self.client.settimeout(2)  # Set a timeout of 1 second for receiving messages
             message = self.client.recv(8000).decode('ascii')
             return message
+        except socket.timeout:
+            return None
         except Exception as e:
             print(f"An error occurred: {e}")
             return None
