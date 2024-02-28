@@ -14,8 +14,8 @@ class Login(tk.Frame):
         self.create_widgets()
 
     def create_widgets(self):
-        image = Image.open("asset/discord.png")
-        image = image.resize((150, 75))
+        image = Image.open("asset/discord2.jpg")
+        image = image.resize((175, 100))
         photo = ImageTk.PhotoImage(image)
         image_label = tk.Label(self, image=photo)
         image_label.pack(pady=(15,10))
