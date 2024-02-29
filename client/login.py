@@ -1,32 +1,37 @@
 import tkinter as tk
 from client import Client
 from chat import Chat
+from PIL import Image, ImageTk
 
 class Login(tk.Frame):
     def __init__(self, master, client):
         tk.Frame.__init__(self, master)
-        self.client = client
+        # self.client = client
 
-        self.username_entry = tk.Entry(self)
-        self.username_entry.pack()
+        master.geometry("420x520")
+        self.configure(bg="#424549")
 
-        self.password_entry = tk.Entry(self, show="*")
-        self.password_entry.pack()
+        self.create_widgets()
 
-        self.login_button = tk.Button(self, text="Login", command=self.login)
-        self.login_button.pack()
+    def create_widgets(self):
+        image = Image.open("asset/discord2.jpg")
+        image = image.resize((175, 100))
+        photo = ImageTk.PhotoImage(image)
+        image_label = tk.Label(self, image=photo)
+        image_label.pack(pady=(15,10))
 
-    def login(self):
-        username = self.username_entry.get()
-        password = self.password_entry.get()
+        email_label = tk.Label(self, text="Email", bg="#424549", fg="white")
+        email_label.pack(pady=(10, 0))
+        email_entry = tk.Entry(self)
+        email_entry.pack(pady=10)
 
-        # Send the username and password to the server
-        self.client.send_message(f"LOGIN {username} {password}")
+        password_label = tk.Label(self, text="Password", bg="#424549", fg="white")
+        password_label.pack(pady=10)
+        password_entry = tk.Entry(self, show="*")
+        password_entry.pack(pady=10)
 
-        # Wait for a response from the server
-        response = self.client.receive_message()
+        login_button = tk.Button(self, text="Connexion")
+        login_button.pack(pady=10)
 
-        if response == "LOGIN SUCCESS":
-            # If the login was successful, switch to the Chat page
-            self.master.switch_frame(Chat)
-
+        signin_button = tk.Button(self, text="Sign in")
+        signin_button.pack(pady=10)

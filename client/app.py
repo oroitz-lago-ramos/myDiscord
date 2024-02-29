@@ -13,17 +13,17 @@ class App(tk.Tk):
         
         self._frame = None
         
-        self.client = Client()
+        # self.client = Client()
         
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
         
-        self.switch_frame(Chat)
+        self.switch_frame(Login)
         
         
  
     def switch_frame(self, frame_class):
-        new_frame = frame_class(self, self.client)
+        new_frame = frame_class(self, None)
         if self._frame is not None:
             self._frame.destroy()
         self._frame = new_frame
