@@ -6,7 +6,7 @@ from PIL import Image, ImageTk
 class Login(tk.Frame):
     def __init__(self, master, client):
         tk.Frame.__init__(self, master)
-        # self.client = client
+        self.client = client
 
         master.geometry("420x520")
         self.configure(bg="#424549")
@@ -30,8 +30,17 @@ class Login(tk.Frame):
         password_entry = tk.Entry(self, show="*")
         password_entry.pack(pady=10)
 
-        login_button = tk.Button(self, text="Connexion")
+        login_button = tk.Button(self, text="Connexion", command=lambda: self.attempt_login(email_entry.get(), password_entry.get()))
         login_button.pack(pady=10)
 
         signin_button = tk.Button(self, text="Sign in")
         signin_button.pack(pady=10)
+        
+    def attempt_login(self, email, password):
+        success = self.client.login(email, password)
+        print(success)
+        if success:
+            self.master.switch_frame(Chat, email)
+        else:
+            # Show an error message and stay on the login page
+            pass

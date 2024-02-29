@@ -13,7 +13,7 @@ class App(tk.Tk):
         
         self._frame = None
         
-        # self.client = Client()
+        self.client = Client()
         
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -22,12 +22,20 @@ class App(tk.Tk):
         
         
  
-    def switch_frame(self, frame_class):
-        new_frame = frame_class(self, None)
-        if self._frame is not None:
-            self._frame.destroy()
-        self._frame = new_frame
-        self._frame.grid(sticky='nsew')
+    def switch_frame(self, frame_class, email=None):
+        if email is not None:
+            new_frame = frame_class(self, self.client, email)  # Pass the email to the frame_class constructor
+            if self._frame is not None:
+                self._frame.destroy()
+            self._frame = new_frame
+            self._frame.grid(sticky='nsew')
+        else:
+            new_frame = frame_class(self, self.client)
+            if self._frame is not None:
+                self._frame.destroy()
+            self._frame = new_frame
+            self._frame.grid(sticky='nsew')
+        
 
 app = App()
 app.mainloop()

@@ -4,9 +4,10 @@ import threading
 
 
 class Chat(tk.Frame):
-    def __init__(self, master, client):
+    def __init__(self, master, client, email):
         tk.Frame.__init__(self, master)
         self.client = client
+        self.email = email
         
 
         master.title("myDiscord - Server rooms")
@@ -71,7 +72,7 @@ class Chat(tk.Frame):
 
     def send_message(self):
         message = self.enter_message_box_var.get()
-        self.client.send_chat_message('oroitz@gmail.com', message)
+        self.client.send_chat_message(self.email, message)
         self.clear_message_box(None)
         
     def start_listening(self):

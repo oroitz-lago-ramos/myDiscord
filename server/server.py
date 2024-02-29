@@ -26,7 +26,7 @@ class Server:
     def handle(self, client):
         while True:
             try:
-                message = client.recv(1024).decode('ascii')
+                message = client.recv(1024).decode('utf-8')
                 if ' > ' in message:
                     command, data = message.split(' > ', 1)
 
@@ -45,6 +45,15 @@ class Server:
                     elif command == 'create_user':
                         
                         self.user.create_user(data)
+                    elif command == 'login':
+                        email, password = data.split(' > ', 1)
+                        if self.user.authenticate(email, password):  # Assuming you have an authenticate method in your User class
+                            self.clients[client]['user_email'] = email
+                            client.send('login_success'.encode('utf-8'))
+                            print("Server sent: login_success")
+                        else:
+                            client.send('login_fail'.encode('utf-8'))
+                            print("Server sent: login_fail")
                 elif message == 'load_messages':
                     messages = self.message.load_messages_from_channel(self.clients[client]['channel_id'])
                     messages_str = json.dumps(messages)
@@ -64,14 +73,14 @@ class Server:
     def receive(self):
         while True:
             client, address = self.server.accept()
-            self.clients[client] = {'user_email': "oroitz@gmail.com", 'channel_id': 3}  # Add the client with their email and channel
+            self.clients[client] = {'user_email': None, 'channel_id': 1}  # Add the client with their email and channel
 
             thread = threading.Thread(target=self.handle, args=(client,))
             thread.start()
     def broadcast(self, message, user, channel_id):
         for client, client_info in self.clients.items():
             if client_info['channel_id'] == channel_id:
-                client.send(f'{user}: {message}'.encode('ascii'))
+                client.send(f' {user}: {message}'.encode('utf-8'))
         
 if __name__ == "__main__":
     my_server = Server()
