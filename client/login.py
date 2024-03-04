@@ -1,5 +1,6 @@
 import tkinter as tk
 from client import Client
+from signin import Signin
 from chat import Chat
 from PIL import Image, ImageTk
 
@@ -44,3 +45,6 @@ class Login(tk.Frame):
         else:
             # Show an error message and stay on the login page
             pass
+        
+    def signin(self):
+        self.master.switch_frame(Signin)
