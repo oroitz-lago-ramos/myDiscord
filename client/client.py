@@ -7,9 +7,24 @@ class Client:
         self.client.connect((host, port))
 
     def send_message(self, message):
-        self.client.send(message.encode('ascii'))
+        self.client.send(message.encode('utf-8'))
     def receive_message(self):
-        return self.client.recv(1024).decode('ascii')
+        try:
+            message = self.client.recv(20000).decode('utf-8')
+            return message
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return None
+    def receive_loop_message(self):
+        try:
+            self.client.settimeout(2)  # Set a timeout of 1 second for receiving messages
+            message = self.client.recv(8000).decode('utf-8')
+            return message
+        except socket.timeout:
+            return None
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return None
 
     def switch_channel(self, channel_id):
         self.send_message(f'switch_channel > {channel_id}')
@@ -25,7 +40,7 @@ class Client:
         else:
             messages = []
         return messages
-    
+
     def load_channels(self):
         self.send_message('load_channels')
         channels_str = self.receive_message()
@@ -34,3 +49,12 @@ class Client:
         else:
             channels = []
         return channels
+    
+    def login(self, email, password):
+        self.send_message(f'login > {email} > {password}')
+        response = self.receive_message()
+        print(f"Client received: {response}")
+        if response == 'login_success':
+            return True
+        else:
+            return False

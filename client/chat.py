@@ -2,10 +2,12 @@ import tkinter as tk
 import client
 import threading
 
+
 class Chat(tk.Frame):
-    def __init__(self, master, client):
+    def __init__(self, master, client, email):
         tk.Frame.__init__(self, master)
         self.client = client
+        self.email = email
         
 
         master.title("myDiscord - Server rooms")
@@ -53,13 +55,14 @@ class Chat(tk.Frame):
     def switch_channel(self,event):
         index = self.channels_list.curselection()[0]
         self.client.switch_channel(index + 1)
-        self.display_messages() 
+        self.display_messages()
 
     def display_messages(self):
         messages = self.client.load_messages()
-        self.messages_list.delete(1, tk.END)  # Clear the text area
+        self.messages_list.delete(0, tk.END)  # Clear the text area
         for message in messages:
-            self.messages_list.insert(tk.END, f"{message[1]}: {message[0]}\n")
+            self.messages_list.insert(tk.END, f" {message[1]}: {message[0]}\n")
+    
     
     def display_channels(self):
         channels = self.client.load_channels()
@@ -69,17 +72,19 @@ class Chat(tk.Frame):
 
     def send_message(self):
         message = self.enter_message_box_var.get()
-        self.client.send_chat_message('oroitz@gmail.com', message)
+        self.client.send_chat_message(self.email, message)
         self.clear_message_box(None)
         
     def start_listening(self):
         listen_thread = threading.Thread(target=self.listen_for_messages)
+        listen_thread.daemon = True  # Set the thread as daemon so it will exit when the main thread exits
         listen_thread.start()
 
     def listen_for_messages(self):
         while True:
-            message = self.client.receive_message() 
-            self.messages_list.insert(tk.END, message) 
+            message = self.client.receive_loop_message() 
+            if message:
+                self.messages_list.insert(tk.END, message)
     
     def clear_message_box(self, event):
         self.enter_message_box_var.set("")
