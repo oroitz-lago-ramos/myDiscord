@@ -58,3 +58,12 @@ class Client:
             return True
         else:
             return False
+        
+    def create_user(self, lastname, name, email, password):
+        self.send_message(f'create_user > {lastname} > {name} > {email} > {password}')
+        response = self.receive_message()
+        print(f"Client received: {response}")
+        if response == 'user_created':
+            return True
+        else:
+            return False

@@ -4,13 +4,14 @@ from typing import Any
 class User:
     def __init__(self, database):
         self.database = database
-    def create(self, lastname, name, password, email, role_id):
+    def create_user(self, lastname, name, password, email, role_id=3):
         """
         Crée un nouvel utilisateur dans la base de données.
         """
-        query = "INSERT INTO user (lastname, name, email, password, role_id) VALUES (%s, %s)"
-        params = (lastname, name, email, password, 3)
+        query = "INSERT INTO user (lastname, name, email, password, role_id) VALUES (%s, %s, %s, %s, %s)"
+        params = (lastname, name, email, password, role_id)
         self.database.execute(query, params)
+        
     def delete(self, email: Any):
         """
         Supprime l'utilisateur de la base de données.

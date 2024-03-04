@@ -43,8 +43,8 @@ class Server:
                         self.broadcast(msg, user_name, channel_id)
                         self.message.send_message(msg, time, user_id, channel_id)
                     elif command == 'create_user':
-                        
-                        self.user.create_user(data)
+                        lastname, name, email, password = data.split(' > ', 3)
+                        self.user.create_user(lastname, name, email, password)
                     elif command == 'login':
                         email, password = data.split(' > ', 1)
                         if self.user.authenticate(email, password):  # Assuming you have an authenticate method in your User class
