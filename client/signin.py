@@ -4,20 +4,22 @@ import tkinter as tk
 from PIL import Image, ImageTk
 
 
-class App(tk.Tk):
-    def __init__(self):
-        super().__init__()
-        self.title("Create Account")
-        self.geometry("420x520")
+class Signin(tk.Frame):
+    def __init__(self, master, client):
+        tk.Frame.__init__(self, master)
+        self.client = client
+        
+        master.title("Create Account")
+        master.geometry("420x520")
         self.configure(bg="#424549")
 
-        self.image = Image.open("discord3.png")
-        self.image = self.image.resize((200, 200))
-        self.photo = ImageTk.PhotoImage(self.image)
-        self.image_label = tk.Label(self, image=self.photo, bg="#424549")
-        self.image_label.pack()
+        # self.image = Image.open("discord3.png")
+        # self.image = self.image.resize((200, 200))
+        # self.photo = ImageTk.PhotoImage(self.image)
+        # self.image_label = tk.Label(self, image=self.photo, bg="#424549")
+        # self.image_label.pack()
 
-        self.image_label.pack()
+        # self.image_label.pack()
 
         self.name_label = tk.Label(self, text="Name:" , bg="#424549", fg="white")
         self.name_label.pack()
@@ -50,5 +52,4 @@ class App(tk.Tk):
         password = self.password_entry.get()
         
         
-app = App()
-app.mainloop()
+        
