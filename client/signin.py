@@ -1,5 +1,4 @@
 import tkinter as tk
-from client import Client
 from chat import Chat
 from PIL import Image, ImageTk
 
@@ -45,10 +44,18 @@ class Signin(tk.Frame):
         self.create_button.pack(pady=10)
         
     def create_account(self):
-        name = self.name_entry.get()
         lastname = self.lastname_entry.get()
+        name = self.name_entry.get()
         email = self.email_entry.get()
         password = self.password_entry.get()
         
+        if self.client.create_user(lastname, name, email, password):
+            self.master.switch_frame(Chat, email)
+        else:
+            print("Account creation failed")
+        
+     
+    
+    
         
         

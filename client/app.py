@@ -1,8 +1,7 @@
 import tkinter as tk
 from client import Client
 from login import Login
-from signin import Signin
-from chat import Chat
+
 from threading import Thread
 
 class App(tk.Tk):
@@ -19,7 +18,7 @@ class App(tk.Tk):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
         
-        self.switch_frame(Signin)
+        self.switch_frame(Login)
         
         
  

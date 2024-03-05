@@ -1,5 +1,4 @@
 import tkinter as tk
-from client import Client
 from signin import Signin
 from chat import Chat
 from PIL import Image, ImageTk
@@ -38,7 +37,7 @@ class Login(tk.Frame):
         login_button = tk.Button(self, text="Connexion", command=lambda: self.attempt_login(email_entry.get(), password_entry.get()))
         login_button.pack(pady=10)
 
-        signin_button = tk.Button(self, text="Sign in")
+        signin_button = tk.Button(self, text="Sign in", command=self.create_account)
         signin_button.pack(pady=10)
         
     def attempt_login(self, email, password):
@@ -49,4 +48,7 @@ class Login(tk.Frame):
         else:
             # Show an error message and stay on the login page
             self.error_message.set("Invalid email or password.")
+            
+    def create_account(self):
+        self.master.switch_frame(Signin)
             

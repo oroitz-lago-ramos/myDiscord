@@ -8,9 +8,6 @@ class User:
         """
         Crée un nouvel utilisateur dans la base de données.
         """
-        if self.user_exists(email):
-            print("A user with this email already exists.")
-            return
         query = "INSERT INTO user (lastname, name, email, password, role_id) VALUES (%s, %s, %s, %s, %s)"
         params = (lastname, name, email, password, role_id)
         self.database.execute(query, params)
@@ -102,6 +99,9 @@ class User:
         """
         query = "SELECT * FROM user WHERE email = %s"
         params = (email,)
-        self.database.execute(query, params)
-        result = self.database.fetchone()
-        return result is not None
+        result = self.database.query(query, params)
+        print(result)
+        if result != []:
+            return result
+        else:
+            return False
