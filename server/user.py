@@ -4,7 +4,7 @@ from typing import Any
 class User:
     def __init__(self, database):
         self.database = database
-    def create_user(self, lastname, name, password, email, role_id=3):
+    def create_user(self, lastname, name, email, password, role_id=3):
         """
         Crée un nouvel utilisateur dans la base de données.
         """
