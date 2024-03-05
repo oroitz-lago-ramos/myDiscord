@@ -11,11 +11,15 @@ class Login(tk.Frame):
 
         master.geometry("420x520")
         self.configure(bg="#424549")
+        
+        self.error_message = tk.StringVar()  # Create a StringVar to hold the error message
+        self.error_label = tk.Label(self, textvariable=self.error_message, fg="red",bg="#424549")  # Create a label to display the error message
+        self.error_label.pack()
 
         self.create_widgets()
 
     def create_widgets(self):
-        image = Image.open("asset/discord2.jpg")
+        image = Image.open("asset/discord3.png")
         image = image.resize((175, 100))
         photo = ImageTk.PhotoImage(image)
         image_label = tk.Label(self, image=photo)
@@ -44,7 +48,5 @@ class Login(tk.Frame):
             self.master.switch_frame(Chat, email)
         else:
             # Show an error message and stay on the login page
-            pass
-        
-    def signin(self):
-        self.master.switch_frame(Signin)
+            self.error_message.set("Invalid email or password.")
+            
