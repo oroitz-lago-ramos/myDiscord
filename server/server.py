@@ -40,7 +40,7 @@ class Server:
                         time = datetime.datetime.now()
                         user_id = self.user.get_id(user_email)
                         user_name = self.user.get_user_name(user_id)
-                        self.broadcast(msg, user_name, channel_id)
+                        self.broadcast(msg, user_name, channel_id, time)
                         self.message.send_message(msg, time, user_id, channel_id)
                     elif command == 'create_user':
                         lastname, name, email, password = data.split(' > ', 3)
@@ -62,6 +62,7 @@ class Server:
                     messages = self.message.load_messages_from_channel(self.clients[client]['channel_id'])
                     messages_str = json.dumps(messages)
                     client.sendall(messages_str.encode('utf-8'))
+                    
                 elif message == 'load_channels':
                     channels = self.channel.get_channels()
                     channels_str = json.dumps(channels)
@@ -81,10 +82,10 @@ class Server:
 
             thread = threading.Thread(target=self.handle, args=(client,))
             thread.start()
-    def broadcast(self, message, user, channel_id):
+    def broadcast(self, message, user, channel_id, date):
         for client, client_info in self.clients.items():
             if client_info['channel_id'] == channel_id:
-                client.send(f' {user}: {message}'.encode('utf-8'))
+                client.send(f' {date} - {user}: {message}'.encode('utf-8'))
         
 if __name__ == "__main__":
     my_server = Server()

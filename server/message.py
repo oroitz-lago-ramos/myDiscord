@@ -12,10 +12,10 @@ class Message:
     
     def load_messages_from_channel(self, channel_id):
         """
-        Récupère les messages et les noms d'utilisateur des auteurs à partir d'un canal.
+        Récupère les messages, les noms d'utilisateur des auteurs, et les timestamps à partir d'un canal.
         """
         query = """
-        SELECT m.message_content, u.name
+        SELECT m.message_content, u.name, m.time
         FROM message AS m
         JOIN user AS u ON m.user_id = u.ID
         WHERE m.channel_id = %s
@@ -23,25 +23,14 @@ class Message:
         """
         params = (channel_id,)
         try:
-            return self.database.query(query, params)
+            result = self.database.query(query, params)
+            # Convert datetime objects to strings
+            result = [(message, name, time.strftime("%Y-%m-%d %H:%M:%S")) for message, name, time in result]
+            return result
         except Exception as e:
             print(f"Erreur lors du chargement des messages du canal : {e}")
             return []
 
-        
-    # def get_message_user_name(self, message_id):
-    #     """
-    #     Récupère l'utilisateur d'un message.
-    #     """
-    #     query = """
-    #     SELECT u.name
-    #     FROM message AS m
-    #     JOIN user AS u ON m.user_id = u.id
-    #     WHERE m.id = %s
-    #     """
-    #     params = (message_id,)
-    #     result = self.database.query(query, params)
-    #     return result[0][0] if result else None
     
     def get_channel_id(self, selected_channel):
         """

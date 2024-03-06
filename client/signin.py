@@ -1,5 +1,6 @@
 import tkinter as tk
 from chat import Chat
+
 from PIL import Image, ImageTk
 
 class Signin(tk.Frame):
@@ -50,12 +51,19 @@ class Signin(tk.Frame):
         password = self.password_entry.get()
         
         if self.client.create_user(lastname, name, email, password):
-            self.master.switch_frame(Chat, email)
+            self.attempt_login(email, password)
         else:
             print("Account creation failed")
         
      
-    
+    def attempt_login(self, email, password):
+        success = self.client.login(email, password)
+        print(success)
+        if success:
+            self.master.switch_frame(Chat, email)
+        else:
+            # Show an error message and stay on the login page
+            self.error_message.set("Invalid email or password.")
     
         
         

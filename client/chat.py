@@ -61,7 +61,7 @@ class Chat(tk.Frame):
         messages = self.client.load_messages()
         self.messages_list.delete(0, tk.END)  # Clear the text area
         for message in messages:
-            self.messages_list.insert(tk.END, f" {message[1]}: {message[0]}\n")
+            self.messages_list.insert(tk.END, f" {message[2]} - {message[1]}: {message[0]}\n")
     
     
     def display_channels(self):
