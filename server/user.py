@@ -23,7 +23,7 @@ class User:
     
     def authenticate(self, email, password):
         """
-        Authenticates a user based on their email and password.
+        Authentifie un utilisateur dans la base de données.
         """
         query = "SELECT ID FROM user WHERE email = %s AND password = %s"
         params = (email, password)
@@ -31,12 +31,12 @@ class User:
         try:
             result = self.database.query(query, params)
             if result:
-                return True  # Return True if a user with the given email and password exists
+                return True  # retourne True si l'utilisateur a été authentifié
             else:
-                return False  # Return False otherwise
+                return False  
         except Exception as e:
             print(f"Error authenticating user: {e}")
-            return False  # Return False if an error occurred
+            return False  
     
     def select_user(self, email, password):
         """
@@ -95,7 +95,7 @@ class User:
         
     def user_exists(self, email):
         """
-        Checks if a user with the given email already exists in the database.
+        Vérifie si un utilisateur existe dans la base de données.
         """
         query = "SELECT * FROM user WHERE email = %s"
         params = (email,)

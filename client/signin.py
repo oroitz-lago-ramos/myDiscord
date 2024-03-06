@@ -4,6 +4,9 @@ from chat import Chat
 from PIL import Image, ImageTk
 
 class Signin(tk.Frame):
+    """
+    Ecran de creation de compte
+    """
     def __init__(self, master, client):
         tk.Frame.__init__(self, master)
         self.client = client
@@ -45,6 +48,9 @@ class Signin(tk.Frame):
         self.create_button.pack(pady=10)
         
     def create_account(self):
+        """
+        Tente de creer un compte avec les informations fournies
+        """
         lastname = self.lastname_entry.get()
         name = self.name_entry.get()
         email = self.email_entry.get()
@@ -57,12 +63,15 @@ class Signin(tk.Frame):
         
      
     def attempt_login(self, email, password):
+        """
+        Tente de se connecter avec les identifiants fournis
+        """
         success = self.client.login(email, password)
         print(success)
         if success:
             self.master.switch_frame(Chat, email)
         else:
-            # Show an error message and stay on the login page
+            # Montre un message d'erreur et reste sur la page de connexion
             self.error_message.set("Invalid email or password.")
     
         

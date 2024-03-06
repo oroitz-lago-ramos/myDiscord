@@ -1,4 +1,7 @@
 class Channel:
+    """
+    Classe qui gère les canaux dans la database.
+    """
     def __init__(self, database):
         self.database = database
 

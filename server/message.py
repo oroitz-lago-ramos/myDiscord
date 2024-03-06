@@ -1,4 +1,7 @@
 class Message:
+    """
+    Classe pour gérer les messages dans la database.
+    """
     def __init__(self, database):
         self.database = database
     def send_message(self, message_content, time, user_id, channel_id):

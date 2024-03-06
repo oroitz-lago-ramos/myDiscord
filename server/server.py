@@ -9,6 +9,9 @@ from channel import Channel
 import datetime
 
 class Server:
+    """
+    Serveur qui gère les connexions des clients
+    """
     def __init__(self, host = '127.0.0.1', port = 55555):
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind((host, port))
@@ -21,9 +24,10 @@ class Server:
         self.message = Message(self.database)
         self.channel = Channel(self.database)
 
-
-    # Then, in your handle method, you can use self.user_email and self.channel_id
     def handle(self, client):
+        """
+        Boucle qui gere les commandes envoyées par les clients et renvoie des messages
+        """
         while True:
             try:
                 message = client.recv(1024).decode('utf-8')
@@ -32,10 +36,10 @@ class Server:
 
                     if command == 'switch_channel':
                         channel_id = int(data)
-                        self.clients[client]['channel_id'] = channel_id  # Update the client's channel
+                        self.clients[client]['channel_id'] = channel_id  # Met à jour le channel du client
                     elif command == 'message':
-                        user_email = self.clients[client]['user_email']  # Get the client's email
-                        channel_id = self.clients[client]['channel_id']  # Get the client's channel
+                        user_email = self.clients[client]['user_email'] 
+                        channel_id = self.clients[client]['channel_id'] 
                         msg = data
                         time = datetime.datetime.now()
                         user_id = self.user.get_id(user_email)
@@ -51,7 +55,7 @@ class Server:
                             client.send('user_created'.encode('utf-8'))
                     elif command == 'login':
                         email, password = data.split(' > ', 1)
-                        if self.user.authenticate(email, password):  # Assuming you have an authenticate method in your User class
+                        if self.user.authenticate(email, password):
                             self.clients[client]['user_email'] = email
                             client.send('login_success'.encode('utf-8'))
                             print("Server sent: login_success")
@@ -71,18 +75,24 @@ class Server:
                     print(f"Received unformatted message: {message}")
             except Exception as e:
                 print(f"An error occurred: {e}")
-                del self.clients[client]  # Remove the client from the dictionary
+                del self.clients[client]  # On efface le client de la liste des clients
                 client.close()
                 break
 
     def receive(self):
+        """
+        Boucle qui attend les connexions des clients et crée un thread pour chaque client
+        """
         while True:
             client, address = self.server.accept()
-            self.clients[client] = {'user_email': None, 'channel_id': 1}  # Add the client with their email and channel
+            self.clients[client] = {'user_email': None, 'channel_id': 1}  # Ajoute le client à la liste des clients par défaut dans le channel 1
 
             thread = threading.Thread(target=self.handle, args=(client,))
             thread.start()
     def broadcast(self, message, user, channel_id, date):
+        """
+        Envoie un message à tous les clients connectés au channel
+        """
         for client, client_info in self.clients.items():
             if client_info['channel_id'] == channel_id:
                 client.send(f' {date.strftime("%Y-%m-%d %H:%M:%S")} - {user}: {message}'.encode('utf-8'))

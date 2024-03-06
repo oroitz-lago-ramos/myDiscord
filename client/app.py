@@ -5,6 +5,9 @@ from login import Login
 from threading import Thread
 
 class App(tk.Tk):
+    """
+    L'application principale, herite de tk.Tk sert a gerer les differents frames
+    """
     def __init__(self):
         super().__init__()
         
@@ -23,8 +26,11 @@ class App(tk.Tk):
         
  
     def switch_frame(self, frame_class, email=None):
+        """
+        Destruit le frame actuel et le remplace par un nouveau
+        """
         if email is not None:
-            new_frame = frame_class(self, self.client, email)  # Pass the email to the frame_class constructor
+            new_frame = frame_class(self, self.client, email)
             if self._frame is not None:
                 self._frame.destroy()
             self._frame = new_frame

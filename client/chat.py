@@ -4,6 +4,9 @@ import threading
 
 
 class Chat(tk.Frame):
+    """
+    Ecran de chat
+    """
     def __init__(self, master, client, email):
         tk.Frame.__init__(self, master)
         self.client = client
@@ -17,8 +20,7 @@ class Chat(tk.Frame):
         master.grid_columnconfigure(0, weight=1)
         master.grid_columnconfigure(1, weight=5)
 
-        # Create two boxes
-        # Left
+        # Creation de deux frames, une pour la liste des channels et une pour les messages
         self.channels_frame = tk.Frame(master, bg=master.MAIN_COLOR)
         self.channels_frame.grid(row=0, column=0, sticky="nsew")
 
@@ -53,42 +55,66 @@ class Chat(tk.Frame):
         self.channels_list.bind("<<ListboxSelect>>", self.switch_channel)
     
     def switch_channel(self,event):
+        """
+        Sert à changer le channel selectionné dans la liste des channels et affiche les messages du nouveau channel
+        """
         index = self.channels_list.curselection()[0]
         self.client.switch_channel(index + 1)
         self.display_messages()
 
     def display_messages(self):
+        """
+        Charge les messages du channel actuel et les affiche dans la liste des messages
+        """
         messages = self.client.load_messages()
-        self.messages_list.delete(0, tk.END)  # Clear the text area
+        self.messages_list.delete(0, tk.END)  # Reset la liste des messages
         for message in messages:
             self.messages_list.insert(tk.END, f" {message[2]} - {message[1]}: {message[0]}\n")
     
     
     def display_channels(self):
+        """
+        Charge les channels et les affiche dans la liste des channels
+        """
         channels = self.client.load_channels()
         for channel in channels:
             self.channels_list.insert(tk.END, f"#{channel[1]}")
         
 
     def send_message(self):
+        """
+        Envoie un message au serveur à partir du contenu de la boite de message à travers le client
+        """
         message = self.enter_message_box_var.get()
         self.client.send_chat_message(self.email, message)
         self.clear_message_box(None)
         
     def start_listening(self):
+        """
+        Demarre un thread pour ecouter les messages du serveur en continue
+        """
         listen_thread = threading.Thread(target=self.listen_for_messages)
-        listen_thread.daemon = True  # Set the thread as daemon so it will exit when the main thread exits
+        listen_thread.daemon = True  # Le thread s'arrete lorsque le programme principal s'arrete
         listen_thread.start()
 
     def listen_for_messages(self):
+        """
+        Ecoute les messages du serveur en continue et les affiche dans la liste des messages
+        """
         while True:
             message = self.client.receive_loop_message() 
             if message:
                 self.messages_list.insert(tk.END, message)
     
     def clear_message_box(self, event):
+        """
+        Efface le contenu de la boite de message
+        """
         self.enter_message_box_var.set("")
     
     def reset_message_box(self, event):
+        """
+        Remet le contenu de la boite de message à sa valeur par defaut
+        """
         self.enter_message_box_var.set("Entrez votre message...")
         

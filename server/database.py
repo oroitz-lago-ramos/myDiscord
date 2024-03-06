@@ -1,5 +1,7 @@
 import mysql.connector
 class Database:
+    """
+    Classe pour gérer la connexion à la base de données et exécuter des requêtes SQL. (CRUD)"""
     def __init__(self):
         self.conn = self.connect_to_database()
 
