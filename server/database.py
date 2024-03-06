@@ -54,8 +54,9 @@ class Database:
                 print("Requête SQL exécutée avec succès.")
             except mysql.connector.Error as e:
                 print(f"Erreur lors de l'exécution de la requête SQL : {e}")
+    
 
-    def fermer_connexion(self):
+    def end_connexion(self):
         """
         Ferme la connexion à la base de données.
         """

@@ -56,7 +56,7 @@ DROP TABLE IF EXISTS `message`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `message` (
   `ID` int NOT NULL AUTO_INCREMENT,
-  `massage_content` text,
+  `message_content` text,
   `time` datetime DEFAULT NULL,
   `user_id` int DEFAULT NULL,
   `channel_id` int DEFAULT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE `message` (
   KEY `channel_id` (`channel_id`),
   CONSTRAINT `message_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`ID`),
   CONSTRAINT `message_ibfk_2` FOREIGN KEY (`channel_id`) REFERENCES `channel` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -74,7 +74,7 @@ CREATE TABLE `message` (
 
 LOCK TABLES `message` WRITE;
 /*!40000 ALTER TABLE `message` DISABLE KEYS */;
-INSERT INTO `message` VALUES (2,'Hey coucou! Bienvenue à tous dans le tchat','2022-05-08 14:30:45',2,1),(4,'Notre groupe est composé de Thomas, Imran, et Oroitz','2022-05-08 14:30:45',2,1),(5,'Ceci est un message','2022-05-08 14:30:45',2,1);
+INSERT INTO `message` VALUES (2,'Hey coucou! Bienvenue à tous dans le tchat','2022-05-08 14:30:45',2,1),(4,'Notre groupe est composé de Thomas, Imran, et Oroitz','2022-05-08 14:30:45',2,1),(5,'Ceci est un message','2022-05-08 14:30:45',2,1),(6,'Bienvenue dans le tchat fun!','2017-07-23 00:00:00',2,2),(7,'Regarde ce meme!','2017-07-23 00:00:00',2,2),(8,'YO','2024-02-19 14:24:03',2,1),(9,'hahahah','2024-02-19 14:24:23',2,2),(10,'SALAM LES FRERES','2024-02-19 14:25:02',2,1),(11,'CECI EST UN TEST','2024-02-19 14:25:53',2,1),(12,'YOO','2024-02-19 14:30:50',2,1),(13,'hahaha ça marche','2024-02-19 14:30:59',2,1),(14,'PLUS OU MOIN JE SAIS PAS SI EN LOCAL ça MARCHE','2024-02-19 14:31:16',2,1),(15,'Ceci ça marche?','2024-02-19 14:31:52',2,1),(16,'YESSS!','2024-02-19 14:31:56',2,1),(17,'SALAM j\'ai un beau sorire ','2024-02-19 22:34:04',2,1),(18,'TEMA LE DISCORD','2024-02-20 08:34:25',2,1),(19,'YOOO','2024-02-20 10:21:49',2,1),(20,'Vraimennt pas mal','2024-02-20 11:02:22',2,1),(21,'Salut!','2024-02-20 11:17:34',2,1),(22,'hag','2024-02-20 11:37:16',2,2);
 /*!40000 ALTER TABLE `message` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -170,4 +170,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-16  1:40:18
+-- Dump completed on 2024-02-20 13:37:03

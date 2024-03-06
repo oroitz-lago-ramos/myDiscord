@@ -1,99 +1,94 @@
 import tkinter as tk
 import client
-import server
-import datetime
+import threading
 
-class Chat:
-    def __init__(self, main_client):
-        # On instancie nos classes à déplacer
-        self.client = main_client
-        self.database = self.client.database
-        self.user = server.User("test","test", self.database)
-        self.channel = server.Channel(self.database)
-        self.message = server.Message(self.database)
-        self.channel_id = 1
+
+class Chat(tk.Frame):
+    def __init__(self, master, client, email):
+        tk.Frame.__init__(self, master)
+        self.client = client
+        self.email = email
         
-        self.root = self.client.root
-        self.root.title("Server rooms")
-        self.root.geometry("1080x720")
 
-        self.root.grid_rowconfigure(0, weight=1)
-        self.root.grid_columnconfigure(0, weight=1)
-        self.root.grid_columnconfigure(1, weight=4)
+        master.title("myDiscord - Server rooms")
+        master.geometry("1080x720")
 
-        # Creer deux boites
-        #gauche-
-        self.channels_frame = tk.Frame(self.root, bg=client.MAIN_COLOR)
+        master.grid_rowconfigure(0, weight=1)
+        master.grid_columnconfigure(0, weight=1)
+        master.grid_columnconfigure(1, weight=5)
 
-        self.channels_list = tk.Listbox(self.channels_frame, bg=client.MAIN_COLOR, fg="white", activestyle="none")
-        for channel_name in self.channel.get_channels():
-            self.channels_list.insert(tk.END, f"#{channel_name}")
+        # Create two boxes
+        # Left
+        self.channels_frame = tk.Frame(master, bg=master.MAIN_COLOR)
+        self.channels_frame.grid(row=0, column=0, sticky="nsew")
+
+        self.channels_list = tk.Listbox(self.channels_frame, bg=master.MAIN_COLOR, fg="white", activestyle="none")
+        self.display_channels()
         self.channels_list.pack(fill="both", expand=True)
 
-        self.channels_frame.grid(row=0, column=0, sticky="nsew")
-        
-        #droite
-        chat_frame = tk.Frame(self.root, bg=client.SECONDARY_COLOR)
-        self.messages_list = tk.Listbox(chat_frame, bg=client.SECONDARY_COLOR, fg="white", activestyle="none")
-        # Le channel 1 est sélectionné par défaut, on affiche les messages de ce channel
-        for message in self.message.load_messages_from_channel(1):
-            self.messages_list.insert(tk.END, f"{message['user_name']}: {message['content']}")
-        
-        
+        # Right
+        self.chat_frame = tk.Frame(master, bg=master.SECONDARY_COLOR)
+        self.chat_frame.grid(row=0, column=1, sticky="nsew")
+
+        self.messages_list = tk.Listbox(self.chat_frame, bg=master.SECONDARY_COLOR, fg="white", activestyle="none")
+        self.display_messages()
         self.messages_list.pack(fill="both", expand=True)
 
         self.enter_message_box_var = tk.StringVar()
-        self.enter_message_box_var.set("Entrez votre message")
-        enter_message_box = tk.Entry(chat_frame, bg=client.SECONDARY_COLOR, fg="white", insertbackground="white", textvariable=self.enter_message_box_var)
+        self.enter_message_box_var.set("Entrez votre message...")
+        enter_message_box = tk.Entry(self.chat_frame, bg=master.SECONDARY_COLOR, fg="white", insertbackground="white", textvariable=self.enter_message_box_var)
         enter_message_box.pack(fill="both")
 
-        submit_button = tk.Button(chat_frame, text="Envoyer", command=self.send_message, bg=client.SECONDARY_COLOR, fg="white", activebackground=client.MAIN_COLOR, activeforeground="white")
+        submit_button = tk.Button(self.chat_frame, text="Envoyer", command=self.send_message, bg=master.SECONDARY_COLOR, fg="white", activebackground=master.MAIN_COLOR, activeforeground="white")
         submit_button.pack(fill="both")
-
-        chat_frame.grid(row=0, column=1, sticky="nsew")
         
-        # self.chat_scroll = tk.Scrollbar(chat_frame)
-        # self.chat_scroll.pack()
-
-        self.channels_list.bind("<<ListboxSelect>>", self.update_messages)
+        self.chat_frame.grid(row=0, column=1, sticky="nsew")
         
-    def run(self):
-        self.root.mainloop()
+        
+        self.start_listening()
+        
+        enter_message_box.bind("<FocusIn>", self.clear_message_box)
+        enter_message_box.bind("<FocusOut>", self.reset_message_box)  
+        enter_message_box.bind("<Return>", lambda event: self.send_message())
+        self.channels_list.bind("<<ListboxSelect>>", self.switch_channel)
     
+    def switch_channel(self,event):
+        index = self.channels_list.curselection()[0]
+        self.client.switch_channel(index + 1)
+        self.display_messages()
+
+    def display_messages(self):
+        messages = self.client.load_messages()
+        self.messages_list.delete(0, tk.END)  # Clear the text area
+        for message in messages:
+            self.messages_list.insert(tk.END, f" {message[2]} - {message[1]}: {message[0]}\n")
+    
+    
+    def display_channels(self):
+        channels = self.client.load_channels()
+        for channel in channels:
+            self.channels_list.insert(tk.END, f"#{channel[1]}")
+        
+
     def send_message(self):
         message = self.enter_message_box_var.get()
-        self.channel_id = self.get_selected_channel_id()
-        print(self.channel_id)
-        print(message)
-        if message and self.channel_id:
-            self.message.send_message(message, datetime.datetime.now(), self.user.get_user_id(), self.channel_id )
-            self.enter_message_box_var.set("")
-        self.update_messages()
+        self.client.send_chat_message(self.email, message)
+        self.clear_message_box(None)
         
-    def update_messages(self,event=None):
-        self.channel_id = self.get_selected_channel_id()
-        self.messages_list.delete(0, tk.END)
-        for message in self.message.load_messages_from_channel(self.channel_id):
-            self.messages_list.insert(tk.END, f"  {message['user_name']}: {message['content']}")
-                    
-    def refresh_messages(self):
-        self.update_messages()
-        self.root.after(1000, self.refresh_messages)
-                      
-    def get_selected_channel(self):
-        selected_index = self.channels_list.curselection()
-        if selected_index:
-            selected_channel = self.channels_list.get(selected_index)
-            return selected_channel
-        return None
+    def start_listening(self):
+        listen_thread = threading.Thread(target=self.listen_for_messages)
+        listen_thread.daemon = True  # Set the thread as daemon so it will exit when the main thread exits
+        listen_thread.start()
+
+    def listen_for_messages(self):
+        while True:
+            message = self.client.receive_loop_message() 
+            if message:
+                self.messages_list.insert(tk.END, message)
     
-    def get_selected_channel_id(self):
-        selected_index = self.channels_list.curselection()
-        if selected_index:
-            selected_channel = self.channels_list.get(selected_index)
-            channel_id = self.channel.get_channel_id(selected_channel[1:])[0][0]
-            return channel_id
-        else:
-            return 1
+    def clear_message_box(self, event):
+        self.enter_message_box_var.set("")
     
-    
+    def reset_message_box(self, event):
+        self.enter_message_box_var.set("Entrez votre message...")
+        
