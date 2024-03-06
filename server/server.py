@@ -85,7 +85,7 @@ class Server:
     def broadcast(self, message, user, channel_id, date):
         for client, client_info in self.clients.items():
             if client_info['channel_id'] == channel_id:
-                client.send(f' {date} - {user}: {message}'.encode('utf-8'))
+                client.send(f' {date.strftime("%Y-%m-%d %H:%M:%S")} - {user}: {message}'.encode('utf-8'))
         
 if __name__ == "__main__":
     my_server = Server()
